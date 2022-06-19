@@ -1,5 +1,5 @@
-import ru.algorithms.Prognosis;
-import ru.tools.Output;
+import ru.algorithms.*;
+import ru.tools.*;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -10,9 +10,7 @@ public class Main
 {
     public static void main( String[] args )
     {
-        Prognosis pr = new Prognosis();
-        Output write = new Output();
-        double average = 0.0;
+        Algorithm prognos = new Algorithm();
 
         List<Double> rates = new ArrayList<Double>();
         rates.add(75.45);
@@ -23,9 +21,7 @@ public class Main
         rates.add(82.10);
         rates.add(90.45);
 
-        average = pr.average(rates);
-        write.printToConsole(average, "next");
-
+        prognos.general(rates, "next", 7);
 
     }
 }
