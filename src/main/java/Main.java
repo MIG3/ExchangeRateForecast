@@ -11,6 +11,7 @@ public class Main
     public static void main( String[] args )
     {
         Algorithm prognos = new Algorithm();
+        Parsing pars = new Parsing();
 
         List<Double> rates = new ArrayList<Double>();
         rates.add(75.45);
@@ -21,7 +22,8 @@ public class Main
         rates.add(82.10);
         rates.add(90.45);
 
-        prognos.general(rates, "next", 7);
+        pars.parsingCommand(" Курс валюты на 7 дней");
+        prognos.general(rates, pars.flag, pars.period);
 
     }
 }
