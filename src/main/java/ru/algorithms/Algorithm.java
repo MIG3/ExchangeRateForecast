@@ -11,15 +11,21 @@ public class Algorithm
         Output write = new Output();
         double average = 0.0;
 
-        if (flag.equals("week"))
+        if (period > 0)
         {
-            for (int i = 0 ; i < period; i++)
+            if (flag.equals("week"))
             {
-                courses.add(pr.average(courses));
-                courses.remove(0);
+                for (int i = 0; i < period; i++)
+                {
+                    courses.add(pr.average(courses));
+                    courses.remove(0);
+                }
             }
+            average = pr.average(courses);
+            write.printToConsole(average);
         }
-        average = pr.average(courses);
-        write.printToConsole(average);
+        else
+            System.out.println("Если нужен прогноз на несколько дней, период должен быть > 0, если на завтра - период должен быть = 1");
+
     }
 }
