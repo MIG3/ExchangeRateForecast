@@ -1,15 +1,24 @@
 package ru.algorithms;
 
 import ru.tools.Output;
+
+import java.util.ArrayList;
 import java.util.List;
+import ru.entity.*;
 
 public class Algorithm
 {
-    public static void general(List<Double> courses, String flag, int period)
+    public static void general(List<CourseData> courseDataList, String flag, int period)
     {
         Prognosis pr = new Prognosis();
         Output write = new Output();
         double average = 0.0;
+
+        List<Double> courses= new ArrayList<Double>();
+        for (int i = 1; i < 8; i++)
+        {
+            courses.add(Double.parseDouble(courseDataList.get(i).Curs.replaceAll(",",".")));
+        }
 
         if (period > 1)
         {
