@@ -2,22 +2,40 @@ package ru.algorithms;
 
 import ru.tools.Output;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import ru.entity.*;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class Algorithm
 {
-    public static void general(List<CourseData> courseDataList, String flag, int period)
+
+    public static void general(List<CourseData> courseDataList, String flag, int period) throws ParseException
     {
         Prognosis pr = new Prognosis();
         Output write = new Output();
+        WorkDate differenceDate = new WorkDate();
+
         double average = 0.0;
+        String oldD = courseDataList.get(1).Data;
+
+        differenceDate.countDays(period, oldD);
 
         List<Double> courses= new ArrayList<Double>();
         for (int i = 1; i < 8; i++)
         {
-            courses.add(Double.parseDouble(courseDataList.get(i).Curs.replaceAll(",",".")));
+            courses.add(Double.parseDouble(courseDataList.get(i).Curs.replaceAll(",", ".")));
         }
 
         if (period > 1)
@@ -40,7 +58,5 @@ public class Algorithm
             average = pr.average(courses);
             write.printToConsole(average);
         }
-//            System.out.println("Если нужен прогноз на несколько дней, период должен быть > 0, если на завтра - период должен быть = 1");
-
     }
 }

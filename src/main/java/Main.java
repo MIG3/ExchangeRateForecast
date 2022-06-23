@@ -5,12 +5,13 @@ import ru.tools.*;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main
 {
-    public static void main( String[] args ) throws IOException
+    public static void main( String[] args ) throws IOException, ParseException
     {
         Algorithm prognos = new Algorithm();
         Parsing pars = new Parsing();
@@ -26,7 +27,7 @@ public class Main
         rates.add(82.10);
         rates.add(90.45);
 
-        pars.parsingCommand(" Курс евро на завтра");
+        pars.parsingCommand(" Курс евро на 7 дней");
 
         if (pars.currency.equals("usd"))
             filePath = "RC_F01_06_2002_T17_06_2022_USD.csv";
