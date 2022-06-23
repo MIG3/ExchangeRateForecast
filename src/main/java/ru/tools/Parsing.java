@@ -73,11 +73,6 @@ public class Parsing
                 data.Cdx = record.get(3);
                 courseDataList.add(data);
             }
-/*            for (CourseData cd: courseDataList)
-            {
-                System.out.println(cd.Nominal);
-                System.out.println(cd.Data);
-            }*/
         } catch (IOException ex)
         {
             ex.printStackTrace();

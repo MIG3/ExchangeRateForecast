@@ -3,16 +3,18 @@ package ru.algorithms;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import static org.apache.commons.lang3.time.DateUtils.addDays;
 
 public class WorkDate
 {
-    public int countDays(int period, String oldDate) throws ParseException
+    public int countDays(int period, String oldDate, String curDate, DateFormat dateFormat) throws ParseException
     {
-        Date date = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        String curDate = dateFormat.format(date);
         if (oldDate.equals(curDate))
             return period;
         else
@@ -25,4 +27,18 @@ public class WorkDate
             return period;
         }
     }
+
+    public Date addOneDay(Date date)
+    {
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Date newDate = addDays(date, 1);
+        return newDate;
+    }
+
+    public int getDayNumberNew(LocalDate date)
+    {
+        DayOfWeek day = date.getDayOfWeek();
+        return day.getValue();
+    }
+
 }

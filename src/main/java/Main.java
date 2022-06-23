@@ -27,7 +27,7 @@ public class Main
         rates.add(82.10);
         rates.add(90.45);
 
-        pars.parsingCommand(" Курс евро на 7 дней");
+        pars.parsingCommand(" Курс доллара на завтра");
 
         if (pars.currency.equals("usd"))
             filePath = "RC_F01_06_2002_T17_06_2022_USD.csv";

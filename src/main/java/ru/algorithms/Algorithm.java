@@ -7,16 +7,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import ru.entity.*;
 
-import static java.time.temporal.ChronoUnit.DAYS;
 
 public class Algorithm
 {
@@ -30,16 +27,22 @@ public class Algorithm
         double average = 0.0;
         String oldD = courseDataList.get(1).Data;
 
-        differenceDate.countDays(period, oldD);
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        String curDate = dateFormat.format(date);
+
+        differenceDate.countDays(period, oldD, curDate, dateFormat);
 
         List<Double> courses= new ArrayList<Double>();
         for (int i = 1; i < 8; i++)
         {
             courses.add(Double.parseDouble(courseDataList.get(i).Curs.replaceAll(",", ".")));
         }
-
+        String nextDate;
+        Date temp = date;
         if (period > 1)
         {
+
             if (flag.equals("period"))
             {
                 for (int i = 0; i < period; i++)
@@ -50,13 +53,18 @@ public class Algorithm
             }
             for (double rate: courses)
             {
-                write.printToConsole(rate);
+                temp = differenceDate.addOneDay(temp);
+                nextDate = dateFormat.format(temp);
+                int d = differenceDate.getDayNumberNew(LocalDate.ofInstant(temp.toInstant(), ZoneId.systemDefault()));
+                write.printToConsole(rate, nextDate, d);
             }
         }
         else
         {
             average = pr.average(courses);
-            write.printToConsole(average);
+            nextDate = dateFormat.format(differenceDate.addOneDay(temp));
+            int d = differenceDate.getDayNumberNew(LocalDate.ofInstant(temp.toInstant(), ZoneId.systemDefault()));
+            write.printToConsole(average, nextDate, d);
         }
     }
 }
