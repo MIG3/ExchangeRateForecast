@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang3.time.DateUtils.addDays;
@@ -16,7 +15,7 @@ public class WorkDate
     public int countDays(int period, String oldDate, String curDate, DateFormat dateFormat) throws ParseException
     {
         if (oldDate.equals(curDate))
-            return period;
+            return 0;
         else
         {
             Date cd = dateFormat.parse(curDate);

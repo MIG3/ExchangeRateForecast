@@ -6,54 +6,54 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
-import java.io.FileReader;
-
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 
 public class Parsing
 {
-    public static String flag;
+    //public static String flag;
     public static int period = 0;
     public static String currency;
 
-    public static void parsingCommand(String command)
+    public static void parsingCommand(String command) throws Exception
     {
 //        throw new UnsupportedOperationException("Парсинг входных команд.");
-        command = command.trim();
-        String[] arr = command.split(" ");
-        for (int i = 0; i < arr.length; i++)
-        {
-            if (arr[i].equals("USD") || arr[i].equals("доллара"))
+
+            command = command.trim();
+            String[] arr = command.split(" ");
+            for (int i = 0; i < arr.length; i++)
             {
-                currency = "usd";
+                arr[i] = arr[i].toLowerCase();
             }
-            else if (arr[i].equals("EUR") || arr[i].equals("евро"))
+            for (int i = 0; i < arr.length; i++)
             {
-                currency = "eur";
-            }
-            else if (arr[i].equals("TRY") || arr[i].equals("турецкой лиры"))
-            {
-                currency = "try";
-            }
-            if (arr[i].equals("завтра") || arr[i].equals("tomorrow"))
-            {
-                flag = "next";
-                period = 1;
-            }
-            else if (arr[i].equals("дней") || arr[i].equals("days"))
-            {
-                flag = "period";
-                period = Integer.parseInt(arr[i-1]);
+                arr[i].toLowerCase();
+                if (arr[i].equals("usd") || arr[i].equals("доллара"))
+                {
+                    currency = "usd";
+                } else if (arr[i].equals("eur") || arr[i].equals("евро"))
+                {
+                    currency = "eur";
+                } else if (arr[i].equals("try") || arr[i].equals("турецкой лиры"))
+                {
+                    currency = "try";
+                }
+                if (arr[i].equals("завтра") || arr[i].equals("tomorrow"))
+                {
+                    period = 1;
+                } else if (arr[i].equals("дней") || arr[i].equals("days"))
+                {
+                    if (Integer.parseInt(arr[i - 1]) > 7 || Integer.parseInt(arr[i - 1]) < 1)
+                        throw new Exception("Количество дней должно быть не меньше 1 и не больше 7");
+                    period = Integer.parseInt(arr[i - 1]);
+                } else if (arr[i].equals("week"))
+                {
+                    period = 7;
+                }
             }
 
-        }
     }
 
     public static List<CourseData> parsingFile(String filePath) throws IOException
