@@ -15,6 +15,14 @@ import ru.entity.*;
 public class Algorithm
 {
 
+    /**
+     * Основной метод, в котором реализована вся логика.
+     * Считается интервал, на который надо посчитать курсы и складывается с периодом из входных данных.
+     * Считаются курсы в зависимости от размера периода и равенства/неравенства текущей даты и самой свежей из входных данных.
+     * @param courseDataList - список с значениями, в которые входят: курсы, даты, номинал и валюта
+     * @param period - количество дней для прогноза
+     * @throws ParseException
+     */
     public static void general(List<CourseData> courseDataList, int period) throws ParseException
     {
         Prognosis pr = new Prognosis();
@@ -49,7 +57,6 @@ public class Algorithm
         //   б. на неделю + период между датами
         if (sum > 1)
         {
-            startDate = dateFormat.parse(courseDataList.get(1).Data);
             // считаю среднее на каждый следующий день
             for (int i = 0; i < sum; i++)
             {
@@ -69,7 +76,6 @@ public class Algorithm
             else
             {
                 for (int i = 0; i < period; i++)
-                //for (double rate : courses)
                 {
                     startDate = differenceDate.addOneDay(startDate);
                     nextDate = dateFormat.format(startDate);

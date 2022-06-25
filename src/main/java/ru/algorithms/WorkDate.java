@@ -12,6 +12,15 @@ import static org.apache.commons.lang3.time.DateUtils.addDays;
 
 public class WorkDate
 {
+    /**
+     * Метод, который считает количество дней, на которые отличаются даты входных данных и текущей.
+     * @param period - количество дней для прогноза
+     * @param oldDate - самая свежая дата во входном файле
+     * @param curDate - текущая дата (сегодняшняя)
+     * @param dateFormat - формат даты
+     * @return - интервал разницы между датами во входном файле и текущей
+     * @throws ParseException
+     */
     public int countDays(int period, String oldDate, String curDate, DateFormat dateFormat) throws ParseException
     {
         if (oldDate.equals(curDate))
@@ -27,6 +36,11 @@ public class WorkDate
         }
     }
 
+    /**
+     * Метод, который увеличивает переданную дату на 1 день
+     * @param date - дата
+     * @return
+     */
     public Date addOneDay(Date date)
     {
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -34,6 +48,11 @@ public class WorkDate
         return newDate;
     }
 
+    /**
+     * Метод, который возвращает номер дня недели для переданной даты на вход
+     * @param date - дата
+     * @return
+     */
     public int getDayNumberNew(LocalDate date)
     {
         DayOfWeek day = date.getDayOfWeek();
