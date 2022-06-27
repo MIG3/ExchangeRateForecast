@@ -2,11 +2,7 @@ package ru.algorithms;
 
 import ru.tools.Output;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 import ru.entity.*;
@@ -14,41 +10,36 @@ import ru.entity.*;
 
 public class Algorithm
 {
-
     /**
      * Основной метод, в котором реализована вся логика.
      * Считается интервал, на который надо посчитать курсы и складывается с периодом из входных данных.
      * Считаются курсы в зависимости от размера периода и равенства/неравенства текущей даты и самой свежей из входных данных.
      * @param courseDataList - список с значениями, в которые входят: курсы, даты, номинал и валюта
      * @param period - количество дней для прогноза
-     * @throws ParseException
      */
-    public static void general(List<CourseData> courseDataList, int period) throws ParseException
+    public void general(List<CourseData> courseDataList, int period)
     {
         Prognosis pr = new Prognosis();
         Output write = new Output();
         WorkDate differenceDate = new WorkDate();
 
         double average = 0.0;
-        String oldD = courseDataList.get(1).Data;
+        LocalDate oldD = courseDataList.get(0).getData();
+        LocalDate curDate = LocalDate.now();
+        LocalDate startDate;
+        LocalDate nextDate;
         int interval, sum;
 
-        Date date = new Date();
-        Date startDate;
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        String curDate = dateFormat.format(date);
 
-        interval = differenceDate.countDays(period, oldD, curDate, dateFormat);
+        interval = differenceDate.countDays(period, oldD, curDate);
         sum = period + interval;
 
         List<Double> courses= new ArrayList<Double>();
         for (int i = 1; i < 8; i++)
         {
-            courses.add(Double.parseDouble(courseDataList.get(i).Curs.replaceAll(",", ".")));
+            courses.add(courseDataList.get(i).getCurs());
         }
         Collections.reverse(courses); // чтобы список начинался с самых старых значений. Пригодится позже
-
-        String nextDate;
 
         // Период > 1:
         // 1. Даты равны -> на неделю от текущей даты
@@ -64,23 +55,19 @@ public class Algorithm
                 courses.remove(0);
             }
 
-            startDate = new Date();
+            startDate = LocalDate.now();
             // если нужен курс на следующий день, получаю последний элемент списка
             if (period == 1)
             {
-                startDate = differenceDate.addOneDay(startDate);
-                nextDate = dateFormat.format(startDate);
-                int d = differenceDate.getDayNumberNew(LocalDate.ofInstant(startDate.toInstant(), ZoneId.systemDefault()));
-                write.printToConsole(courses.get(courses.size() - 1), nextDate, d);
+                nextDate = differenceDate.addOneDay(startDate);
+                write.printToConsole(courses.get(courses.size() - 1), nextDate);
             }
             else
             {
                 for (int i = 0; i < period; i++)
                 {
                     startDate = differenceDate.addOneDay(startDate);
-                    nextDate = dateFormat.format(startDate);
-                    int d = differenceDate.getDayNumberNew(LocalDate.ofInstant(startDate.toInstant(), ZoneId.systemDefault()));
-                    write.printToConsole(courses.get(i), nextDate, d);
+                    write.printToConsole(courses.get(i), startDate);
                 }
             }
         }
@@ -88,11 +75,9 @@ public class Algorithm
         // Даты равны -> на следующий день от текущей даты
         else
         {
-            startDate = new Date();
+            nextDate = LocalDate.now();
             average = pr.average(courses);
-            nextDate = dateFormat.format(differenceDate.addOneDay(startDate));
-            int d = differenceDate.getDayNumberNew(LocalDate.ofInstant(startDate.toInstant(), ZoneId.systemDefault()));
-            write.printToConsole(average, nextDate, d);
+            write.printToConsole(average, nextDate);
         }
     }
 }

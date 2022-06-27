@@ -9,7 +9,7 @@ public class Prognosis
      * @param courses - курсы из входных данных
      * @return - среднее значение
      */
-    public static double average(List<Double> courses)
+    public double average(List<Double> courses)
     {
         return courses.stream()
                 .mapToDouble(a -> a)
