@@ -40,23 +40,27 @@ public class Parsing
             String dataToLowerCase = arr[i].toLowerCase();
             if (dataToLowerCase.equals("usd") || dataToLowerCase.equals("доллара"))
             {
-                filePath = "RC_F01_06_2002_T17_06_2022_USD.csv";
-            } else if (dataToLowerCase.equals("eur") || dataToLowerCase.equals("евро"))
+                filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_USD.csv";
+            }
+            else if (dataToLowerCase.equals("eur") || dataToLowerCase.equals("евро"))
             {
-                filePath = "RC_F01_06_2002_T17_06_2022_EUR.csv";
-            } else if (dataToLowerCase.equals("try") || dataToLowerCase.equals("турецкой лиры"))
+                filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_EUR.csv";
+            }
+            else if (dataToLowerCase.equals("try") || dataToLowerCase.equals("турецкой лиры"))
             {
-                filePath = "RC_F01_06_2002_T17_06_2022_TRY.csv";
+                filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_TRY.csv";
             }
             if (dataToLowerCase.equals("завтра") || dataToLowerCase.equals("tomorrow"))
             {
                 period = 1;
-            } else if (dataToLowerCase.equals("дней") || dataToLowerCase.equals("days"))
+            }
+            else if (dataToLowerCase.equals("дней") || dataToLowerCase.equals("days"))
             {
                 if (Integer.parseInt(arr[i - 1]) > 7 || Integer.parseInt(arr[i - 1]) < 1)
                     throw new RuntimeException("Количество дней должно быть не меньше 1 и не больше 7");
                 period = Integer.parseInt(arr[i - 1]);
-            } else if (dataToLowerCase.equals("week"))
+            }
+            else if (dataToLowerCase.equals("week") || dataToLowerCase.equals("неделю"))
             {
                 period = 7;
             }
