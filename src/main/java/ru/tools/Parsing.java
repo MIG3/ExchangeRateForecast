@@ -24,33 +24,30 @@ public class Parsing
     public static void parsingCommand(String command) throws Exception
     {
         command = command.trim();
-        String[] arr = command.split(" ");
+        String[] arr = command.split("\\s+");
+
         for (int i = 0; i < arr.length; i++)
         {
-            arr[i] = arr[i].toLowerCase();
-        }
-        for (int i = 0; i < arr.length; i++)
-        {
-            arr[i].toLowerCase();
-            if (arr[i].equals("usd") || arr[i].equals("доллара"))
+            String dataToLowerCase = arr[i].toLowerCase();
+            if (dataToLowerCase.equals("usd") || dataToLowerCase.equals("доллара"))
             {
                 currency = "usd";
-            } else if (arr[i].equals("eur") || arr[i].equals("евро"))
+            } else if (dataToLowerCase.equals("eur") || dataToLowerCase.equals("евро"))
             {
                 currency = "eur";
-            } else if (arr[i].equals("try") || arr[i].equals("турецкой лиры"))
+            } else if (dataToLowerCase.equals("try") || dataToLowerCase.equals("турецкой лиры"))
             {
                 currency = "try";
             }
-            if (arr[i].equals("завтра") || arr[i].equals("tomorrow"))
+            if (dataToLowerCase.equals("завтра") || dataToLowerCase.equals("tomorrow"))
             {
                 period = 1;
-            } else if (arr[i].equals("дней") || arr[i].equals("days"))
+            } else if (dataToLowerCase.equals("дней") || dataToLowerCase.equals("days"))
             {
                 if (Integer.parseInt(arr[i - 1]) > 7 || Integer.parseInt(arr[i - 1]) < 1)
                     throw new Exception("Количество дней должно быть не меньше 1 и не больше 7");
                 period = Integer.parseInt(arr[i - 1]);
-            } else if (arr[i].equals("week"))
+            } else if (dataToLowerCase.equals("week"))
             {
                 period = 7;
             }
