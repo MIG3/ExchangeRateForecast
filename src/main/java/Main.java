@@ -5,6 +5,7 @@ import ru.tools.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main
 {
@@ -13,9 +14,14 @@ public class Main
         Algorithm prognos = new Algorithm();
         Parsing pars = new Parsing();
         String filePath = "";
+
+        Scanner in = new Scanner(System.in);
+        System.out.print("Введите команду: ");
+        String command = in.nextLine();
+
         try
         {
-            pars.parsingCommand("rate USD tomorrow");
+            pars.parsingCommand(command);
 
             if (pars.currency.equals("usd"))
                 filePath = "RC_F01_06_2002_T17_06_2022_USD.csv";
