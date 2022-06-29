@@ -24,11 +24,21 @@ public class WorkDate
 
     /**
      * Метод, который увеличивает переданную дату на 1 день
-     * @param date - дата
-     * @return
+     * @param date - сегодня
+     * @return - завтра
      */
     public LocalDate addOneDay(LocalDate date)
     {
         return date.plusDays(1);
+    }
+
+    /**
+     * Метод, получающий текущую дату, которая была в прошлом году
+     * @param date - текущая дата
+     * @return - прошлогодняя дата
+     */
+    public LocalDate lastYear(LocalDate date)
+    {
+        return date.minusYears(1);
     }
 }
