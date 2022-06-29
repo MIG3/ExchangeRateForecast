@@ -1,17 +1,17 @@
 import ru.algorithms.*;
-import ru.tools.*;
 
 
 public class Main
 {
+    private static String TYPE_PROGRAM = "console";
+
     public static void main( String[] args ) throws Exception
     {
         Algorithm prognos = new Algorithm();
-        Parsing pars = new Parsing();
-
-        String command = pars.readCommand();
-        pars.parsingCommand(command);
-        prognos.general(pars.parsingFile(pars.filePath), pars.period);
+        if (TYPE_PROGRAM.equals("console"))
+            prognos.console();
+        else if (TYPE_PROGRAM.equals("bot"))
+            prognos.telegramBot();
 
 
     }

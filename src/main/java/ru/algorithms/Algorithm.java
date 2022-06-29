@@ -1,11 +1,16 @@
 package ru.algorithms;
 
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import ru.tools.Bot;
 import ru.tools.Output;
 
 import java.time.LocalDate;
 import java.util.*;
 
 import ru.entity.*;
+import ru.tools.Parsing;
 
 
 public class Algorithm
@@ -78,6 +83,29 @@ public class Algorithm
             nextDate = LocalDate.now();
             average = pr.average(courses);
             write.printToConsole(average, nextDate);
+        }
+    }
+
+    public void console() throws Exception
+    {
+        Algorithm prognos = new Algorithm();
+        Parsing pars = new Parsing();
+
+        String command = pars.readCommand();
+        pars.parsingCommand(command);
+        prognos.general(pars.parsingFile(pars.filePath), pars.period);
+
+
+    }
+
+    public void telegramBot()
+    {
+        try
+        {
+            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+            telegramBotsApi.registerBot(new Bot());
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 }

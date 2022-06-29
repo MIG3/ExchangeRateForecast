@@ -18,6 +18,9 @@ import org.apache.commons.csv.CSVRecord;
 public class Parsing
 {
     public static int period = 0;
+    public LocalDate date;
+    public String algorithm;
+    public boolean graph = false;
     public String filePath;
 
     public String readCommand()
@@ -39,31 +42,29 @@ public class Parsing
         {
             String dataToLowerCase = arr[i].toLowerCase();
             if (dataToLowerCase.equals("usd") || dataToLowerCase.equals("доллара"))
-            {
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_USD.csv";
-            }
             else if (dataToLowerCase.equals("eur") || dataToLowerCase.equals("евро"))
-            {
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_EUR.csv";
-            }
-            else if (dataToLowerCase.equals("try") || dataToLowerCase.equals("турецкой лиры"))
-            {
+            else if (dataToLowerCase.equals("try") || dataToLowerCase.equals("турецкой_лиры"))
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_TRY.csv";
-            }
             if (dataToLowerCase.equals("завтра") || dataToLowerCase.equals("tomorrow"))
-            {
                 period = 1;
-            }
             else if (dataToLowerCase.equals("дней") || dataToLowerCase.equals("days"))
             {
                 if (Integer.parseInt(arr[i - 1]) > 7 || Integer.parseInt(arr[i - 1]) < 1)
                     throw new RuntimeException("Количество дней должно быть не меньше 1 и не больше 7");
                 period = Integer.parseInt(arr[i - 1]);
             }
-            else if (dataToLowerCase.equals("week") || dataToLowerCase.equals("неделю"))
-            {
+            else if (dataToLowerCase.equals("неделю") || dataToLowerCase.equals("week"))
                 period = 7;
-            }
+            else if (dataToLowerCase.equals("месяц") || dataToLowerCase.equals("month"))
+                period = 30;
+            else if (dataToLowerCase.equals("дату") || dataToLowerCase.equals("date"))
+                date = LocalDate.parse(arr[i - 1]);
+            else if (dataToLowerCase.equals("алгоритму") || dataToLowerCase.equals("alg"))
+                algorithm = arr[i - 1];
+            else if (dataToLowerCase.equals("график") || dataToLowerCase.equals("graph"))
+                graph = true;
         }
     }
 
