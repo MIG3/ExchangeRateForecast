@@ -8,6 +8,7 @@ import ru.tools.Output;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import ru.entity.*;
 import ru.tools.Parsing;
@@ -22,8 +23,10 @@ public class Algorithm
      * @param courseDataList - список с значениями, в которые входят: курсы, даты, номинал и валюта
      * @param period - количество дней для прогноза
      */
-    public void general(List<CourseData> courseDataList, int period)
+    public Map<LocalDate, Double> general(List<CourseData> courseDataList, int period)
     {
+        Map<LocalDate, Double> forecast = new HashMap<LocalDate, Double>();
+        Map<LocalDate, Double> forecastReverse = new LinkedHashMap<LocalDate, Double>();
         Prognosis pr = new Prognosis();
         Output write = new Output();
         WorkDate differenceDate = new WorkDate();
@@ -65,14 +68,17 @@ public class Algorithm
             if (period == 1)
             {
                 nextDate = differenceDate.addOneDay(startDate);
-                write.printToConsole(courses.get(courses.size() - 1), nextDate);
+                //write.printToConsole(courses.get(courses.size() - 1), nextDate);
+                // не сразу печатать, а записывать в коллекцию, которую будет возвращать general, а после него уже вызывать метод печати в чат
+                forecast.put(nextDate, courses.get(courses.size() - 1));
             }
             else
             {
                 for (int i = 0; i < period; i++)
                 {
                     startDate = differenceDate.addOneDay(startDate);
-                    write.printToConsole(courses.get(i), startDate);
+                    //write.printToConsole(courses.get(i), startDate);
+                    forecast.put(startDate, courses.get(i));
                 }
             }
         }
@@ -82,8 +88,10 @@ public class Algorithm
         {
             nextDate = LocalDate.now();
             average = pr.average(courses);
-            write.printToConsole(average, nextDate);
+            //write.printToConsole(average, nextDate);
+            forecast.put(nextDate, average);
         }
+        return forecast;
     }
 
     public void console() throws Exception
