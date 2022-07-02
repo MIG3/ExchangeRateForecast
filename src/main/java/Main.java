@@ -3,7 +3,7 @@ import ru.algorithms.*;
 
 public class Main
 {
-    private static String TYPE_PROGRAM = "bot";
+    private static String TYPE_PROGRAM = "console";
 
     public static void main( String[] args ) throws Exception
     {

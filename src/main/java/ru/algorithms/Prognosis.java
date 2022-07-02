@@ -1,10 +1,11 @@
 package ru.algorithms;
 
 import ru.entity.CourseData;
+import ru.tools.Parsing;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
+import java.time.Period;
+import java.util.*;
 
 public class Prognosis
 {
@@ -25,21 +26,48 @@ public class Prognosis
      * Алгоритм прогнозирования "Прошлогодний" - возвращает курс за дату равную текущей, но год наза
      *
      * @param courseDataList - исходные данные
-     * @param lastYearDate   дата в прошлом году
-     * @return - курс годом ранее
+     * @param dateForPrediction - дата для прогноза
+     * @return - курс годом ранее от заданной даты
      */
-    public double lastYear(List<CourseData> courseDataList, LocalDate lastYearDate)
+    public Map<LocalDate, Double> courseLastYear(List<CourseData> courseDataList, LocalDate dateForPrediction)
     {
+        LocalDate lyd = dateForPrediction.minusYears(1);
+        LocalDate lastDateSource = courseDataList.get(1).getData();
+        LocalDate startDate = lastDateSource;
+        LocalDate nextDate;
+        List<Double> courses = new ArrayList<Double>();
+        Map<LocalDate, Double> coursesAndDate = new HashMap<LocalDate, Double>();
         double rates = 0;
-        for (int i = 1; i < courseDataList.size(); i++)
+
+        if (dateForPrediction.isBefore(LocalDate.now()))
+            throw new RuntimeException("Дата должна быть больше текущей!");
+        else
         {
-            if (courseDataList.get(i).getData() == lastYearDate)
-                rates = courseDataList.get(i).getCurs();
+            // эта часть работает
+            if (lyd.isBefore(lastDateSource) || lyd.equals(lastDateSource))
+            {
+                for (int i = 1; i < courseDataList.size(); i++)
+                {
+                    if (lyd.equals(lastDateSource))
+                    {
+                        coursesAndDate.put(dateForPrediction,courseDataList.get(i).getCurs());
+                        break;
+                    }
+                }
+            }
             else
-                // проверить, что данный подход будет корректно работать, если дата в прошлом годы отсутствует
-                rates = courseDataList.get(i - 1).getCurs();
+            {
+                courses.add(courseDataList.get(1).getCurs());
+                // количество дней между последней в исходных данных и датой, что на год меньше искомой
+                int countDays = Period.between(lastDateSource, lyd).getDays();
+                for (int i = 1; i < countDays + 1; i++)
+                {
+                    startDate = startDate.plusDays(1);
+                    courses.add(courseDataList.get(i).getCurs());
+                }
+            }
         }
-        return rates;
+        return coursesAndDate;
     }
 
     /**

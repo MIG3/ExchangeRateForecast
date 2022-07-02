@@ -14,12 +14,19 @@ public class Output
     final private DecimalFormat DEC_FORMAT = new DecimalFormat("#.##");
     /**
      * Метод печатает результат в консоль, округлённый до двух знаков после запятой
-     * @param averageRate - среднее значение курсов
+     * @param forecast - пары: дата и курс
      */
-    public void printToConsole(double averageRate, LocalDate date)
+    public void printToConsole(Map<LocalDate, Double> forecast)
     {
         //DecimalFormat df = new DecimalFormat("#.##");
-        System.out.println(date.format(DateTimeFormatter.ofPattern("EEE - dd.MM.yyyy", Locale.getDefault())) + " - " + DEC_FORMAT.format(averageRate));
+        for (Map.Entry<LocalDate, Double> item : forecast.entrySet())
+        {
+            System.out.println(item.getKey().format(DateTimeFormatter.ofPattern("EEE - dd.MM.yyyy", Locale.getDefault())) + " - " + DEC_FORMAT.format(item.getValue()));
+        }
     }
 
+    public void graph(Map<LocalDate, Double> forecast)
+    {
+
+    }
 }

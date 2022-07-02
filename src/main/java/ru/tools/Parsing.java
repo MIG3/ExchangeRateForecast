@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import org.apache.commons.csv.CSVFormat;
@@ -18,7 +19,7 @@ import org.apache.commons.csv.CSVRecord;
 public class Parsing
 {
     public static int period = 0;
-    public LocalDate date;
+    public static LocalDate date;
     public String algorithm;
     public boolean graph = false;
     public String filePath;
@@ -51,8 +52,8 @@ public class Parsing
                 period = 1;
             else if (dataToLowerCase.equals("дней") || dataToLowerCase.equals("days"))
             {
-                if (Integer.parseInt(arr[i - 1]) > 7 || Integer.parseInt(arr[i - 1]) < 1)
-                    throw new RuntimeException("Количество дней должно быть не меньше 1 и не больше 7");
+               /* if (Integer.parseInt(arr[i - 1]) > 7 || Integer.parseInt(arr[i - 1]) < 1)
+                    throw new RuntimeException("Количество дней должно быть не меньше 1 и не больше 7");*/
                 period = Integer.parseInt(arr[i - 1]);
             }
             else if (dataToLowerCase.equals("неделю") || dataToLowerCase.equals("week"))
@@ -60,7 +61,7 @@ public class Parsing
             else if (dataToLowerCase.equals("месяц") || dataToLowerCase.equals("month"))
                 period = 30;
             else if (dataToLowerCase.equals("дату") || dataToLowerCase.equals("date"))
-                date = LocalDate.parse(arr[i - 1]);
+                date = LocalDate.parse(arr[i - 1], DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault()));
             else if (dataToLowerCase.equals("алгоритму") || dataToLowerCase.equals("alg"))
                 algorithm = arr[i - 1];
             else if (dataToLowerCase.equals("график") || dataToLowerCase.equals("graph"))

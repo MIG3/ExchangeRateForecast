@@ -76,11 +76,6 @@ public class Bot extends TelegramLongPollingBot
         Output write = new Output();
 
         pars.parsingCommand(textMsg);
-        Map<LocalDate, Double> response = prognos.general(pars.parsingFile(pars.filePath), Parsing.period);
-        // здесь должен быть вызов метода печати в чат
-
-
-        //response = write.printToMessage(forecast);
-        return response;
+        return prognos.general(pars.parsingFile(pars.filePath), Parsing.period, 1);
     }
 }
