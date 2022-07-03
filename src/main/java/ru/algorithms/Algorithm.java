@@ -99,7 +99,12 @@ public class Algorithm
         }
         else
         {
+
             forecast = pr.courseLastYear(courseDataList, Parsing.date);
+            Map.Entry actualValue = forecast.entrySet()
+                    .stream()
+                    .findFirst()
+                    .get();
         }
         return forecast;
     }
@@ -112,7 +117,7 @@ public class Algorithm
 
         String command = pars.readCommand();
         pars.parsingCommand(command);
-        write.printToConsole(prognos.general(pars.parsingFile(pars.filePath), pars.period, 1));
+        write.printToConsole(prognos.general(pars.parsingFile(pars.filePath), pars.period, 3));
 
 
     }
