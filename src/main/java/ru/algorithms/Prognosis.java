@@ -101,17 +101,15 @@ public class Prognosis
      */
     private double courseLastYearT(List<CourseData> courseDataList, LocalDate lyd)
     {
+        LocalDate lydMinusD = lyd.minusDays(2);
         double c = 0;
         for (int i = 1; i < courseDataList.size(); i++)
         {
-            if (lyd.equals(courseDataList.get(i).getData()))
+            if (lyd.equals(courseDataList.get(i).getData()) || lydMinusD.equals(courseDataList.get(i).getData()))
             {
                 c = courseDataList.get(i).getCurs();
             }
         }
-        if (c == 0)
-            throw new RuntimeException("Дата за год до прогноза не найдена! Укажите другую на 2 дня меньше.");
-        else
-            return c;
+        return c;
     }
 }
