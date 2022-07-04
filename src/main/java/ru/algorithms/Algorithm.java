@@ -117,8 +117,10 @@ public class Algorithm
 
         String command = pars.readCommand();
         pars.parsingCommand(command);
-        write.printToConsole(prognos.general(pars.parsingFile(pars.filePath), pars.period, 3));
-
+        Map<LocalDate, Double> forecast = new HashMap<LocalDate, Double>();
+        forecast = prognos.general(pars.parsingFile(pars.filePath), pars.period, 2);
+        write.printToConsole(forecast);
+        write.graph(forecast, pars.currency, pars.period);
 
     }
 

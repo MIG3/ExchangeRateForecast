@@ -18,9 +18,10 @@ import org.apache.commons.csv.CSVRecord;
 
 public class Parsing
 {
-    public static int period = 0;
+    public int period = 0;
     public static LocalDate date;
     public String algorithm;
+    public String currency;
     public boolean graph = false;
     public String filePath;
 
@@ -43,11 +44,20 @@ public class Parsing
         {
             String dataToLowerCase = arr[i].toLowerCase();
             if (dataToLowerCase.equals("usd") || dataToLowerCase.equals("доллара"))
+            {
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_USD.csv";
+                currency = "usd";
+            }
             else if (dataToLowerCase.equals("eur") || dataToLowerCase.equals("евро"))
+            {
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_EUR.csv";
+                currency = "eur";
+            }
             else if (dataToLowerCase.equals("try") || dataToLowerCase.equals("турецкой_лиры"))
+            {
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_TRY.csv";
+                currency = "try";
+            }
             if (dataToLowerCase.equals("завтра") || dataToLowerCase.equals("tomorrow"))
                 period = 1;
             else if (dataToLowerCase.equals("дней") || dataToLowerCase.equals("days"))
