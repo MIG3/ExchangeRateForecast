@@ -1,13 +1,12 @@
 package ru.algorithms;
 
 import ru.entity.CourseData;
-import ru.tools.Parsing;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 
-public class Prognosis
+public class LastYearAlgorithm implements IPrognosis
 {
     /**
      * Алгоритм прогнозирования - среднее арифметическое значение на основании 7 последних курсов
@@ -15,12 +14,12 @@ public class Prognosis
      * @param courses - курсы из входных данных
      * @return - среднее значение
      */
-    public double average(List<Double> courses)
+    /*public double average(List<Double> courses)
     {
         return courses.stream()
                 .mapToDouble(a -> a)
                 .average().orElse(0);
-    }
+    }*/
 
     /**
      * Алгоритм прогнозирования "Прошлогодний" - возвращает пару:курс за дату равную текущей, но год назад, и дату прогноза.
@@ -87,11 +86,11 @@ public class Prognosis
      * @param courses - курсы за 30 дней
      * @return - случайный курс
      */
-    public double mystic(List<Double> courses)
+    /*public double mystic(List<Double> courses)
     {
         Random random = new Random();
         return courses.get(random.nextInt(courses.size()));
-    }
+    }*/
 
     /**
      * Ищет курс из тех, что есть в файлах данных
@@ -112,4 +111,5 @@ public class Prognosis
         }
         return c;
     }
+
 }

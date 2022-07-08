@@ -2,7 +2,7 @@ package ru.algorithms;
 
 import java.time.LocalDate;
 import java.time.Period;
-public class WorkDate
+public class NumDaysBetweenDates
 {
     /**
      * Метод, который считает количество дней, на которые отличаются даты входных данных и текущей.
@@ -20,25 +20,5 @@ public class WorkDate
             Period diff = Period.between(curDate, oldDate);
             return Math.abs(diff.getDays());
         }
-    }
-
-    /**
-     * Метод, который увеличивает переданную дату на 1 день
-     * @param date - сегодня
-     * @return - завтра
-     */
-    public LocalDate addOneDay(LocalDate date)
-    {
-        return date.plusDays(1);
-    }
-
-    /**
-     * Метод, получающий текущую дату, которая была в прошлом году
-     * @param date - текущая дата
-     * @return - прошлогодняя дата
-     */
-    public LocalDate lastYear(LocalDate date)
-    {
-        return date.minusYears(1);
     }
 }

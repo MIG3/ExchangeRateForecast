@@ -1,33 +1,57 @@
 package ru.tools;
-import ru.entity.*;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 
-
-public class Parsing
+public class ParsingCommand
 {
-    public int period = 0;
-    public static LocalDate date;
-    public String algorithm;
-    public String currency;
-    public boolean graph = false;
-    public String filePath;
+    private int period = 0;
+    private static LocalDate date;
+    private String currency;
+    private boolean graph = false;
+    private String filePath;
+    private String algorithm;
+
+    public int getPeriod()
+    {
+        return period;
+    }
+    public static LocalDate getDate()
+    {
+        return date;
+    }
+    public String getAlgorithm()
+    {
+        return algorithm;
+    }
+    public boolean isGraph()
+    {
+        return graph;
+    }
+        public String getCurrency()
+    {
+        return currency;
+    }
+        public String getFilePath()
+    {
+        return filePath;
+    }
 
     public String readCommand()
     {
         Scanner in = new Scanner(System.in);
+        System.out.print(
+                "Прогноз валюты на период или дату по заданному алгоритму c возможным построением графика.\n" +
+                "-----------------------------------------------------------------------------------------\n" +
+                "Алгоритмы необходимо указывать на английском языке.\nДоступны следующие варианты:\n" +
+                "- average - алгоритм среднего на основе последних 7 дней;\n" +
+                "- mystic - алгоритм среднего на основе последних 30 дней;\n" +
+                "- from_internet - алгоритм линейной регрессии на основе последних 30 дней;\n" +
+                "- last_year - алгоритм курса за прошлогоднюю дату.\n" +
+                "После названия алгоритма необходимо ипользовать ключевое слово alg (average alg).\n");
         System.out.print("Введите команду: ");
         return in.nextLine();
     }
@@ -78,37 +102,4 @@ public class Parsing
                 graph = true;
         }
     }
-
-    /**
-     * Парсинг входных данных из файлов в поля класса CourseData
-     * @param filePath - путь к файлу
-     * @return - список со всеми значениями
-     * @throws IOException - стек ошибки
-     */
-    public List<CourseData> parsingFile(String filePath) throws IOException
-    {
-        List<CourseData> courseDataList = new ArrayList<CourseData>();
-        try (Reader reader = Files.newBufferedReader(Paths.get(filePath), Charset.defaultCharset()))
-        {
-            // чтение csv файла. withFirstRecordAsHeader пропускает первую строку
-            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader().parse(reader);
-
-            for (CSVRecord record : records)
-            {
-                CourseData data = new CourseData();
-                String tt = record.get(0).trim().replace(" ", "");
-                data.setNominal(Integer.parseInt(tt));
-                data.setData(LocalDate.parse(record.get(1), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-                String tmp = record.get(2).replaceAll("^\"|\"$", "").trim();
-                data.setCurs(Double.parseDouble(tmp.replaceAll(",", ".")));
-                data.setCdx(record.get(3));
-                courseDataList.add(data);
-            }
-        } catch (NullPointerException ex)
-        {
-            throw new NullPointerException("Произошла ошибка чтения файла!");
-        }
-        return courseDataList;
-    }
-
 }

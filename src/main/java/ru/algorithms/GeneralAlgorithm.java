@@ -1,19 +1,14 @@
 package ru.algorithms;
 
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.tools.Bot;
-import ru.tools.Output;
+import ru.tools.*;
 
 import java.time.LocalDate;
 import java.util.*;
 
 import ru.entity.*;
-import ru.tools.Parsing;
 
 
-public class Algorithm
+public class GeneralAlgorithm
 {
     /**
      * Основной метод, в котором реализована вся логика.
@@ -22,13 +17,15 @@ public class Algorithm
      * @param courseDataList - список с значениями, в которые входят: курсы, даты, номинал и валюта
      * @param period - количество дней для прогноза
      */
-    public Map<LocalDate, Double> general(List<CourseData> courseDataList, int period, int algo)
+    public Map<LocalDate, Double> general(List<CourseData> courseDataList, int period, String algo)
     {
         Map<LocalDate, Double> forecast = new HashMap<LocalDate, Double>();
-        Map<LocalDate, Double> forecastReverse = new LinkedHashMap<LocalDate, Double>();
-        Prognosis pr = new Prognosis();
-        WorkDate differenceDate = new WorkDate();
-        Parsing pars = new Parsing();
+        LastYearAlgorithm lastYearAlgorithm = new LastYearAlgorithm();
+        MysticAlgorithm mysticAlgorithm = new MysticAlgorithm();
+        AverageAlgorithm averageAlgorithm = new AverageAlgorithm();
+
+        NumDaysBetweenDates differenceDate = new NumDaysBetweenDates();
+        ParsingCommand pars = new ParsingCommand();
 
         double average = 0.0;
         LocalDate oldD = courseDataList.get(0).getData();
@@ -41,13 +38,13 @@ public class Algorithm
         interval = differenceDate.countDays(period, oldD, curDate);
         sum = period + interval;
 
-        if (algo==1)
+        if (algo.equals("average"))
             countDayFromAlgo = 8;
-        else if (algo == 2)
+        else if (algo.equals("mystic") || algo.equals("from_internet"))
             countDayFromAlgo = 31;
 
         List<Double> courses= new ArrayList<Double>();
-        if (algo != 3)
+        if (!algo.equals("last_year"))
         {
             // в этом цикле считаются те курсы, на основе которых потом считаются для периодов
             for (int i = 1; i < countDayFromAlgo; i++) // в этом цикле число, до которого бежит i - это то число на основе которого применяется алгоритм
@@ -55,6 +52,12 @@ public class Algorithm
                 courses.add(courseDataList.get(i).getCurs());
             }
             Collections.reverse(courses); // чтобы список начинался с самых старых значений. Пригодится позже
+
+            double[] numOfDate = new double[courses.size()];
+            for (int i = 0; i < numOfDate.length; i++)
+            {
+                numOfDate[i] = i+1;
+            }
 
             // Период > 1:
             // 1. Даты равны -> на неделю от текущей даты
@@ -66,10 +69,17 @@ public class Algorithm
                 // считаю значение курса по заданному алгоритму на каждый следующий день
                 for (int i = 0; i < sum; i++)
                 {
-                    if (algo == 1)
-                        courses.add(pr.average(courses));
-                    else if (algo == 2)
-                        courses.add(pr.mystic(courses));
+                    if (algo.equals("average"))
+                        courses.add(averageAlgorithm.average(courses));
+                    else if (algo.equals("mystic"))
+                        courses.add(mysticAlgorithm.mystic(courses));
+                    else if (algo.equals("from_internet"))
+                    {
+                        LinearRegression lr = new LinearRegression(numOfDate, courses);
+                        double lrr =  lr.predict(31);
+                        courses.add(lrr);
+
+                    }
                     courses.remove(0);
                 }
 
@@ -77,66 +87,46 @@ public class Algorithm
                 // если нужен курс на следующий день, получаю последний элемент списка
                 if (period == 1)
                 {
-                    nextDate = differenceDate.addOneDay(startDate);
+                    nextDate = startDate.plusDays(1);
                     forecast.put(nextDate, courses.get(courses.size() - 1));
                 } else
                 {
                     for (int i = 0; i < period; i++)
                     {
-                        startDate = differenceDate.addOneDay(startDate);
+                        startDate = startDate.plusDays(1);
                         forecast.put(startDate, courses.get(i));
                     }
                 }
             }
             // Период == 1:
             // Даты равны -> на следующий день от текущей даты
+            // Добавить и другие алгоритмы ниже
             else
             {
                 nextDate = LocalDate.now();
-                average = pr.average(courses);
+                average = averageAlgorithm.average(courses);
                 forecast.put(nextDate, average);
             }
         }
         else
         {
-
-            forecast = pr.courseLastYear(courseDataList, Parsing.date);
+            forecast = lastYearAlgorithm.courseLastYear(courseDataList, pars.getDate());
             Map.Entry actualValue = forecast.entrySet()
                     .stream()
                     .findFirst()
-                    .get();
+                    .orElseThrow();
         }
         return forecast;
     }
-
-    public void console() throws Exception
+    private double linearRegression(List<Double> courses)
     {
-        Algorithm prognos = new Algorithm();
-        Parsing pars = new Parsing();
-        Output write = new Output();
-
-        String command = pars.readCommand();
-        pars.parsingCommand(command);
-        Map<LocalDate, Double> forecast = new HashMap<LocalDate, Double>();
-        forecast = prognos.general(pars.parsingFile(pars.filePath), pars.period, 2);
-        write.printToConsole(forecast);
-        write.graph(forecast, pars.currency, pars.period);
-
-    }
-
-    /**
-     * Работает с ботом
-     */
-    public void telegramBot()
-    {
-        try
+        double[] numOfDate = new double[courses.size()];
+        for (int i = 0; i < numOfDate.length; i++)
         {
-            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(new Bot());
+            numOfDate[i] = i+1;
         }
-        catch (TelegramApiException e)
-        {
-            e.printStackTrace();
-        }
+        LinearRegression lr = new LinearRegression(numOfDate, courses);
+        double lrr =  lr.predict(31);
+        return lrr;
     }
 }
