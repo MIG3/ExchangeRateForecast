@@ -21,13 +21,19 @@ public class StartConsole
         Graph graph = new Graph();
 
         String command = pars.readCommand();
-        pars.parsingCommand(command);
+
+        Map<String, String> curFile = new HashMap<String, String>();
+        curFile = pars.parsingCommand(command);
+
         Map<LocalDate, Double> forecast = new HashMap<LocalDate, Double>();
-        forecast = prognos.general(file.parsingFile(pars.getFilePath()), pars.getPeriod(), pars.getAlgorithm());
-        write.printToConsole(forecast);
-        if (pars.isGraph())
+        for (Map.Entry<String, String> item : curFile.entrySet())
         {
-            graph.diagram(forecast, pars.getCurrency(), pars.getPeriod());
+            forecast = prognos.general(file.parsingFile(item.getValue()), pars.getPeriod(), pars.getAlgorithm());
+            write.printToConsole(forecast);
+            if (pars.isGraph())
+            {
+                graph.diagram(forecast, item.getValue(), pars.getPeriod());
+            }
         }
     }
 }

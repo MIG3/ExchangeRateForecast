@@ -1,6 +1,7 @@
 package ru.tools;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
@@ -59,11 +60,11 @@ public class ParsingCommand
      *
      * @param command - строка с командой
      */
-    public void parsingCommand(String command)
+    public Map<String, String> parsingCommand(String command)
     {
         command = command.trim();
         String[] arr = command.split("\\s+");
-
+        Map<String, String> currencyAndFile = new HashMap<>();
         for (int i = 0; i < arr.length; i++)
         {
             String dataToLowerCase = arr[i].toLowerCase();
@@ -71,16 +72,19 @@ public class ParsingCommand
             {
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_USD.csv";
                 currency = "usd";
+                currencyAndFile.put(currency,filePath);
             }
             else if (dataToLowerCase.equals("eur") || dataToLowerCase.equals("евро"))
             {
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_EUR.csv";
                 currency = "eur";
+                currencyAndFile.put(currency,filePath);
             }
             else if (dataToLowerCase.equals("try") || dataToLowerCase.equals("турецкой_лиры"))
             {
                 filePath = "src/main/resources/RC_F01_06_2002_T17_06_2022_TRY.csv";
                 currency = "try";
+                currencyAndFile.put(currency,filePath);
             }
             if (dataToLowerCase.equals("завтра") || dataToLowerCase.equals("tomorrow"))
                 period = 1;
@@ -101,5 +105,6 @@ public class ParsingCommand
             else if (dataToLowerCase.equals("график") || dataToLowerCase.equals("graph"))
                 graph = true;
         }
+        return currencyAndFile;
     }
 }
