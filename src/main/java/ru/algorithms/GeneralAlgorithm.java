@@ -15,11 +15,11 @@ public class GeneralAlgorithm
      * Считается интервал, на который надо посчитать курсы и складывается с периодом из входных данных.
      * Считаются курсы в зависимости от размера периода и равенства/неравенства текущей даты и самой свежей из входных данных.
      * @param courseDataList - список с значениями, в которые входят: курсы, даты, номинал и валюта
-     * @param period - количество дней для прогноза
+     * @param period - количество дней для прогноза, которое задаётся в команде
      */
-    public Map<LocalDate, Double> general(List<CourseData> courseDataList, int period, String algo)
+    public Map<LocalDate, Double> general(List<CourseData> courseDataList, int period, String algo, LocalDate futureDay)
     {
-        Map<LocalDate, Double> forecast = new HashMap<LocalDate, Double>();
+        Map<LocalDate, Double> forecast = new TreeMap<LocalDate, Double>();
         LastYearAlgorithm lastYearAlgorithm = new LastYearAlgorithm();
         MysticAlgorithm mysticAlgorithm = new MysticAlgorithm();
         AverageAlgorithm averageAlgorithm = new AverageAlgorithm();
@@ -35,7 +35,11 @@ public class GeneralAlgorithm
         int interval, sum;
         int countDayFromAlgo = 0;
 
-        interval = differenceDate.countDays(period, oldD, curDate);
+        interval = differenceDate.countDays(oldD, curDate);
+        //если необходимо указать курс на конкретную дату
+        if (futureDay != null)
+            period = differenceDate.countDays(curDate, futureDay);
+
         sum = period + interval;
 
         if (algo.equals("average"))
@@ -69,25 +73,34 @@ public class GeneralAlgorithm
                 // считаю значение курса по заданному алгоритму на каждый следующий день
                 for (int i = 0; i < sum; i++)
                 {
-                    if (algo.equals("average"))
-                        courses.add(averageAlgorithm.average(courses));
-                    else if (algo.equals("mystic"))
-                        courses.add(mysticAlgorithm.mystic(courses));
-                    else if (algo.equals("from_internet"))
+                    switch (algo)
                     {
-                        LinearRegression lr = new LinearRegression(numOfDate, courses);
-                        double lrr =  lr.predict(31);
-                        courses.add(lrr);
+                        case "average":
+                            courses.add(averageAlgorithm.average(courses));
+                            break;
+                        case "mystic":
+                            courses.add(mysticAlgorithm.mystic(courses));
+                            break;
+                        case "from_internet":
+                            LinearRegression lr = new LinearRegression(numOfDate, courses);
+                            double lrr = lr.predict(31);
+                            courses.add(lrr);
 
+                            break;
                     }
                     courses.remove(0);
                 }
 
                 startDate = LocalDate.now();
                 // если нужен курс на следующий день, получаю последний элемент списка
-                if (period == 1)
+                if (period == 1 || futureDay != null)
                 {
-                    nextDate = startDate.plusDays(1);
+                    if (futureDay != null)
+                    {
+                        nextDate = futureDay;
+                    }
+                    else
+                        nextDate = startDate.plusDays(1);
                     forecast.put(nextDate, courses.get(courses.size() - 1));
                 } else
                 {
@@ -100,11 +113,23 @@ public class GeneralAlgorithm
             }
             // Период == 1:
             // Даты равны -> на следующий день от текущей даты
-            // Добавить и другие алгоритмы ниже
             else
             {
-                nextDate = LocalDate.now();
-                average = averageAlgorithm.average(courses);
+                nextDate = LocalDate.now().plusDays(1);
+                switch (algo)
+                {
+                    case "average":
+                        average = averageAlgorithm.average(courses);
+                        break;
+                    case "mystic":
+                        average = mysticAlgorithm.mystic(courses);
+                        break;
+                    case "from_internet":
+                        double[] dateFuture = new double[]{1};
+                        LinearRegression lr = new LinearRegression(dateFuture, courses);
+                        average = lr.predict(31);
+                        break;
+                }
                 forecast.put(nextDate, average);
             }
         }
@@ -117,16 +142,5 @@ public class GeneralAlgorithm
                     .orElseThrow();
         }
         return forecast;
-    }
-    private double linearRegression(List<Double> courses)
-    {
-        double[] numOfDate = new double[courses.size()];
-        for (int i = 0; i < numOfDate.length; i++)
-        {
-            numOfDate[i] = i+1;
-        }
-        LinearRegression lr = new LinearRegression(numOfDate, courses);
-        double lrr =  lr.predict(31);
-        return lrr;
     }
 }

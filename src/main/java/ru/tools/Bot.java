@@ -3,15 +3,20 @@ package ru.tools;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.launch.StartBot;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -43,21 +48,37 @@ public class Bot extends TelegramLongPollingBot
                 Message inMess = update.getMessage();
                 String chatId = inMess.getChatId().toString();
                 StartBot bot = new StartBot();
-                //Получаем текст сообщения пользователя, отправляем в метод вызывающий главный метод general
-                Map<LocalDate, Double> fc = bot.start(inMess.getText());
-                SendMessage outMess = new SendMessage();
-                outMess.setChatId(chatId);
-                for(Map.Entry<LocalDate, Double> item : fc.entrySet())
-                {
-                    response += item.getKey().format(DateTimeFormatter.ofPattern("EEE - dd.MM.yyyy", Locale.getDefault())) + " - " + DEC_FORMAT.format(item.getValue())+ "\n";
-                 }
-                outMess.setText(response);
-                execute(outMess);
 
+                List<Map<LocalDate, Double>> fc = bot.start(inMess.getText());
+
+                SendPhoto outMess = new SendPhoto();
+                outMess.setChatId(chatId);
+                for (Map<LocalDate, Double> localDateDoubleMap : fc)
+                {
+                    for (Map.Entry<LocalDate, Double> item : localDateDoubleMap.entrySet())
+                    {
+                        response += item.getKey().format(DateTimeFormatter.ofPattern(
+                                "EEE - dd.MM.yyyy", Locale.getDefault()))
+                                + " - "
+                                + DEC_FORMAT.format(item.getValue()) + "\n";
+                    }
+                    response += "-------------------------------\n";
+                }
+                InputFile photo = new InputFile(new File("./src/main/diagram/diagram.png"));
+                outMess.setPhoto(photo);
+                outMess.setCaption(response);
+                try 
+                {
+                    execute(outMess);
+                } 
+                catch (TelegramApiException e) 
+                {
+                    e.printStackTrace();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (PythonExecutionException | TelegramApiException e)
+        } catch (PythonExecutionException e)
         {
             throw new RuntimeException(e);
         }

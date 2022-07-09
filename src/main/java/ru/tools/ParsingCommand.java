@@ -1,16 +1,13 @@
 package ru.tools;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class ParsingCommand
 {
     private int period = 0;
-    private static LocalDate date;
+    private LocalDate date;
     private String currency;
     private boolean graph = false;
     private String filePath;
@@ -20,7 +17,7 @@ public class ParsingCommand
     {
         return period;
     }
-    public static LocalDate getDate()
+    public LocalDate getDate()
     {
         return date;
     }
@@ -32,11 +29,11 @@ public class ParsingCommand
     {
         return graph;
     }
-        public String getCurrency()
+    public String getCurrency()
     {
         return currency;
     }
-        public String getFilePath()
+    public String getFilePath()
     {
         return filePath;
     }
@@ -64,7 +61,7 @@ public class ParsingCommand
     {
         command = command.trim();
         String[] arr = command.split("\\s+");
-        Map<String, String> currencyAndFile = new HashMap<>();
+        Map<String, String> currencyAndFile = new TreeMap<>();
         for (int i = 0; i < arr.length; i++)
         {
             String dataToLowerCase = arr[i].toLowerCase();
@@ -90,8 +87,6 @@ public class ParsingCommand
                 period = 1;
             else if (dataToLowerCase.equals("дней") || dataToLowerCase.equals("days"))
             {
-               /* if (Integer.parseInt(arr[i - 1]) > 7 || Integer.parseInt(arr[i - 1]) < 1)
-                    throw new RuntimeException("Количество дней должно быть не меньше 1 и не больше 7");*/
                 period = Integer.parseInt(arr[i - 1]);
             }
             else if (dataToLowerCase.equals("неделю") || dataToLowerCase.equals("week"))

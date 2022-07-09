@@ -6,12 +6,11 @@ public class NumDaysBetweenDates
 {
     /**
      * Метод, который считает количество дней, на которые отличаются даты входных данных и текущей.
-     * @param period - количество дней для прогноза
      * @param oldDate - самая свежая дата во входном файле
      * @param curDate - текущая дата (сегодняшняя)
      * @return - интервал разницы между датами во входном файле и текущей
      */
-    public int countDays(int period, LocalDate oldDate, LocalDate curDate)
+    public int countDays(LocalDate oldDate, LocalDate curDate)
     {
         if (oldDate.equals(curDate))
             return 0;

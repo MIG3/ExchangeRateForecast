@@ -16,7 +16,10 @@ public class Print
     {
         for (Map.Entry<LocalDate, Double> item : forecast.entrySet())
         {
-            System.out.println(item.getKey().format(DateTimeFormatter.ofPattern("EEE - dd.MM.yyyy", Locale.getDefault())) + " - " + DEC_FORMAT.format(item.getValue()));
+            System.out.println(item.getKey().format(DateTimeFormatter.ofPattern(
+                    "EEE - dd.MM.yyyy", Locale.getDefault()))
+                    + " - "
+                    + DEC_FORMAT.format(item.getValue()));
         }
         System.out.println("---------------------------------");
     }

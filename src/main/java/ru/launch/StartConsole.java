@@ -7,8 +7,7 @@ import ru.tools.ParsingCommand;
 import ru.tools.ParsingFile;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class StartConsole
 {
@@ -22,18 +21,25 @@ public class StartConsole
 
         String command = pars.readCommand();
 
-        Map<String, String> curFile = new HashMap<String, String>();
+        Map<String, String> curFile = new TreeMap<String, String>();
         curFile = pars.parsingCommand(command);
 
-        Map<LocalDate, Double> forecast = new HashMap<LocalDate, Double>();
+        List<List<Double>> listOLists = new ArrayList<List<Double>>();
+
+        Map<LocalDate, Double> forecast = new TreeMap<LocalDate, Double>();
         for (Map.Entry<String, String> item : curFile.entrySet())
         {
-            forecast = prognos.general(file.parsingFile(item.getValue()), pars.getPeriod(), pars.getAlgorithm());
+            forecast = prognos.general(file.parsingFile(item.getValue()), pars.getPeriod(), pars.getAlgorithm(), pars.getDate());
+
+            List<Double> temp = forecast.entrySet().parallelStream().collect(ArrayList::new,
+                    (list, element) -> list.add(element.getValue()), ArrayList::addAll);
+            listOLists.add(temp);
+
             write.printToConsole(forecast);
-            if (pars.isGraph())
-            {
-                graph.diagram(forecast, item.getValue(), pars.getPeriod());
-            }
+        }
+        if (pars.isGraph() && pars.getDate() == null)
+        {
+            graph.diagram(listOLists, pars.getPeriod());
         }
     }
 }
