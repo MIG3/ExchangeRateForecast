@@ -24,7 +24,7 @@ public class Graph
         plt.title("Динамика курсов валют");
         plt.xlabel("Даты");
         plt.ylabel("Курсы влют");
-        plt.savefig("./src/main/diagram/diagram2.png").dpi(200);
+        plt.savefig("./src/main/diagram/diagram.png").dpi(200);
         //plt.show();
     }
 }

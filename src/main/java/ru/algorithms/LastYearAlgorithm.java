@@ -33,11 +33,11 @@ public class LastYearAlgorithm implements IPrognosis
     public Map<LocalDate, Double> courseLastYear(List<CourseData> courseDataList, LocalDate dateForPrediction)
     {
         LocalDate lyd = dateForPrediction.minusYears(1);
-        LocalDate lastDateSource = courseDataList.get(1).getData();
+        LocalDate lastDateSource = courseDataList.get(0).getData();
         LocalDate startDate = lastDateSource;
         LocalDate nextDate;
         List<Double> courses = new ArrayList<Double>();
-        Map<LocalDate, Double> coursesAndDate = new HashMap<LocalDate, Double>();
+        Map<LocalDate, Double> coursesAndDate = new TreeMap<>();
         double rates = 0;
         double curs = 0;
         if (dateForPrediction.isBefore(LocalDate.now()))
@@ -51,7 +51,7 @@ public class LastYearAlgorithm implements IPrognosis
             }
             else
             {
-                coursesAndDate.put(courseDataList.get(1).getData(), courseDataList.get(1).getCurs());
+                coursesAndDate.put(courseDataList.get(0).getData(), courseDataList.get(0).getCurs());
                 // количество дней между последней в исходных данных и датой, что на год меньше искомой
                 int countDays = Period.between(lastDateSource, lyd).getDays();
 

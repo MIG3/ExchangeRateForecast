@@ -135,7 +135,8 @@ public class GeneralAlgorithm
         }
         else
         {
-            forecast = lastYearAlgorithm.courseLastYear(courseDataList, pars.getDate());
+            assert futureDay != null;
+            forecast = lastYearAlgorithm.courseLastYear(courseDataList, futureDay);
             Map.Entry actualValue = forecast.entrySet()
                     .stream()
                     .findFirst()

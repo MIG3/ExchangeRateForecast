@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Bot extends TelegramLongPollingBot
 {
@@ -48,11 +49,14 @@ public class Bot extends TelegramLongPollingBot
                 Message inMess = update.getMessage();
                 String chatId = inMess.getChatId().toString();
                 StartBot bot = new StartBot();
+                ParsingCommand pars = new ParsingCommand();
+
+                Map<String, String> curFile = new TreeMap<String, String>();
+                curFile = pars.parsingCommand(inMess.getText());
 
                 List<Map<LocalDate, Double>> fc = bot.start(inMess.getText());
 
-                SendPhoto outMess = new SendPhoto();
-                outMess.setChatId(chatId);
+
                 for (Map<LocalDate, Double> localDateDoubleMap : fc)
                 {
                     for (Map.Entry<LocalDate, Double> item : localDateDoubleMap.entrySet())
@@ -64,16 +68,36 @@ public class Bot extends TelegramLongPollingBot
                     }
                     response += "-------------------------------\n";
                 }
-                InputFile photo = new InputFile(new File("./src/main/diagram/diagram.png"));
-                outMess.setPhoto(photo);
-                outMess.setCaption(response);
-                try 
+
+                if(pars.isGraph())
                 {
-                    execute(outMess);
-                } 
-                catch (TelegramApiException e) 
+                    SendPhoto outMess = new SendPhoto();
+                    outMess.setChatId(chatId);
+                    InputFile photo = new InputFile(new File("./src/main/diagram/diagram.png"));
+                    outMess.setPhoto(photo);
+                    outMess.setCaption(response);
+                    try
+                    {
+                        execute(outMess);
+                    }
+                    catch (TelegramApiException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
                 {
-                    e.printStackTrace();
+                    SendMessage outMess = new SendMessage();
+                    outMess.setChatId(chatId);
+                    outMess.setText(response);
+                    try
+                    {
+                        execute(outMess);
+                    }
+                    catch (TelegramApiException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (IOException e) {

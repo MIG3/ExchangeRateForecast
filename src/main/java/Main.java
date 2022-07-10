@@ -8,7 +8,7 @@ import ru.tools.Bot;
 
 public class Main
 {
-    private static String TYPE_PROGRAM = "console";
+    private static String TYPE_PROGRAM = "bot";
 
     public static void main( String[] args ) throws Exception
     {
