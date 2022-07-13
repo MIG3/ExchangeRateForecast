@@ -1,6 +1,7 @@
 package ru.tools;
 
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
+import org.apache.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -26,7 +27,7 @@ public class Bot extends TelegramLongPollingBot
     final private String BOT_TOKEN = "5451582967:AAFvygGJoGSOs_pVSjRWMVeR3eFnaWAyViw";
     final private String BOT_NAME = "BotCurrencyRateForecast";
     final private DecimalFormat DEC_FORMAT = new DecimalFormat("#.##");
-
+    private static Logger log = Logger.getLogger(Bot.class.getName());
     @Override
     public String getBotUsername()
     {
@@ -50,24 +51,11 @@ public class Bot extends TelegramLongPollingBot
                 String chatId = inMess.getChatId().toString();
                 StartBot bot = new StartBot();
                 ParsingCommand pars = new ParsingCommand();
+                PrintToBot printToBot = new PrintToBot();
 
-                Map<String, String> curFile = new TreeMap<String, String>();
-                curFile = pars.parsingCommand(inMess.getText());
-
+                pars.parsingCommand(inMess.getText());
                 List<Map<LocalDate, Double>> fc = bot.start(inMess.getText());
-
-
-                for (Map<LocalDate, Double> localDateDoubleMap : fc)
-                {
-                    for (Map.Entry<LocalDate, Double> item : localDateDoubleMap.entrySet())
-                    {
-                        response += item.getKey().format(DateTimeFormatter.ofPattern(
-                                "EEE - dd.MM.yyyy", Locale.getDefault()))
-                                + " - "
-                                + DEC_FORMAT.format(item.getValue()) + "\n";
-                    }
-                    response += "-------------------------------\n";
-                }
+                response = printToBot.print(fc, DEC_FORMAT);
 
                 if(pars.isGraph())
                 {
@@ -82,7 +70,7 @@ public class Bot extends TelegramLongPollingBot
                     }
                     catch (TelegramApiException e)
                     {
-                        e.printStackTrace();
+                        log.trace(e);
                     }
                 }
                 else
@@ -96,12 +84,13 @@ public class Bot extends TelegramLongPollingBot
                     }
                     catch (TelegramApiException e)
                     {
-                        e.printStackTrace();
+                        log.trace(e);
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e)
+        {
+            log.trace(e);
         } catch (PythonExecutionException e)
         {
             throw new RuntimeException(e);

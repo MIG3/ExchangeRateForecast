@@ -1,5 +1,5 @@
 package ru.algorithms;
 
-public interface IPrognosis
+interface IPrognosis
 {
 }

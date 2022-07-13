@@ -53,9 +53,11 @@ public class ParsingCommand
         System.out.print("Введите команду: ");
         return in.nextLine();
     }
-    /** Парсинг входной команды
-     *
-     * @param command - строка с командой
+
+    /**
+     * Парсинг входной команды
+     * @param command команда на вход
+     * @return мапа из пар валюта - путь к файлу с этой валютой
      */
     public Map<String, String> parsingCommand(String command)
     {

@@ -2,7 +2,7 @@ package ru.launch;
 
 import ru.algorithms.GeneralAlgorithm;
 import ru.tools.Graph;
-import ru.tools.Print;
+import ru.tools.PrintToConsole;
 import ru.tools.ParsingCommand;
 import ru.tools.ParsingFile;
 
@@ -15,7 +15,7 @@ public class StartConsole
     {
         GeneralAlgorithm prognos = new GeneralAlgorithm();
         ParsingCommand pars = new ParsingCommand();
-        Print write = new Print();
+        PrintToConsole write = new PrintToConsole();
         ParsingFile file = new ParsingFile();
         Graph graph = new Graph();
 

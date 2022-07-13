@@ -1,3 +1,4 @@
+import org.apache.log4j.Logger;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -5,11 +6,13 @@ import ru.algorithms.*;
 import ru.launch.StartConsole;
 import ru.tools.Bot;
 
+import java.util.logging.Level;
+
 
 public class Main
 {
     private static String TYPE_PROGRAM = "bot";
-
+    private static Logger log = Logger.getLogger(Main.class.getName());
     public static void main( String[] args ) throws Exception
     {
         StartConsole console = new StartConsole();
@@ -24,7 +27,7 @@ public class Main
             }
             catch (TelegramApiException e)
             {
-                e.printStackTrace();
+                log.debug(e);
             }
         }
     }

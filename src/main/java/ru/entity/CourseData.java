@@ -7,20 +7,20 @@ import java.time.LocalDate;
  */
 public class CourseData
 {
-    private int Nominal;
+    private int nominal;
     private LocalDate Data;
-    private double Curs;
-    private String Cdx;
+    private double curs;
+    private String cdx;
 
 
     public int getNominal()
     {
-        return Nominal;
+        return nominal;
     }
 
     public void setNominal(int nominal)
     {
-        Nominal = nominal;
+        this.nominal = nominal;
     }
 
     public LocalDate getData()
@@ -35,21 +35,21 @@ public class CourseData
 
     public double getCurs()
     {
-        return Curs;
+        return curs;
     }
 
     public void setCurs(double curs)
     {
-        Curs = curs;
+        this.curs = curs;
     }
 
     public String getCdx()
     {
-        return Cdx;
+        return cdx;
     }
 
     public void setCdx(String cdx)
     {
-        Cdx = cdx;
+        this.cdx = cdx;
     }
 }
